@@ -1,0 +1,31 @@
+{% extends "gameApp/base.html" %}
+{% block title%} lets start {% endblock %}
+
+{% block body_block %}
+
+<div class="container">
+  <div class="jumbotron">
+    <h1>WELCOME to the GAME</h1>
+    {% if user.is_authenticated %}
+        <h2>Welcome {{ user.username }}!</h2>
+        <br>
+        {% if winner %}
+        <div class="win" >
+          <h2>congratutaltions {{ user.username }}, you win the game and your score is: {{score}}</h2>
+        </div>
+        {% elif right_answer %}
+        <div class="lose" >
+          <h2>sorry {{ user.username }}, but you lose the game and your score is: {{score}}</h2>
+          <p><strong>the right answer(s) was {{right_answer}} </strong> </p>
+        </div>
+        {% endif %}
+        <div class="playgame">
+          <a href="{% url 'gameApp:gameplay' %}" class="btn btn-primary">new game</a>
+        </div>
+    {% else %}
+        <h2>please sign-up or sign-in to play a game</h2>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

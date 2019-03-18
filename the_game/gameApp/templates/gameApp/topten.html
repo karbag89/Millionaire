@@ -1,0 +1,20 @@
+{% extends "gameApp/base.html" %}
+{% block title %} TOP 10 Scores {% endblock %}
+
+{% block body_block %}
+
+  <div class="container">
+    {% if scores%}
+      <div class="jumbotron">
+        <ol>
+          {% for score in scores %}
+          <li> username: {{score.user}} score: {{score.score}}</li>
+          {% endfor %}
+        </ol>
+      </div>
+    {% else %}
+      <h2>there are now scores yet</h2>
+    {% endif %}
+  </div>
+  
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'gameApp/base.html' %}
+{%block title %} please login {% endblock %}
+{% block body_block %}
+  <div class="container">
+    <div class="jumbotron">
+      <h1>Please Login</h1>
+        <form method="post" action="{% url 'gameApp:user_login' %}">
+          {% csrf_token %}
+          <label for="username">Username:</label>
+          <input type="text" name="username" placeholder="Username">
+          <label for="password"></label>
+          <input type="password" name="password">
+          <input type="submit" name="" value="Login">
+        </form>
+        {% if err_msg %}
+        <div> <h2> {{err_msg}} </h2> </div>
+        {% endif %}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "gameApp/base.html" %}
+{% load staticfiles %}
+{% block title%} questions {% endblock %}
+
+{% block body_block %}
+
+  <div class="container">
+    {% for question in questions %}
+    <div class="question jumbotron" style="display:none">
+      <div class="row" >
+        <h2 class="col-sm-6"> {{question.question}}</h2>
+        <h2 class="col-sm-6">score:{{question.point}}</h2>
+      </div>
+      <div class="row">
+        <ol>
+          {% for answer in question.questionanswers.all %}
+            <li class="col-sm-6" style="margin-bottom: 10px"> <button class="btn btn-primary" type="button" id="{{answer.id}}" value="{{answer.id}}">{{answer}}</button> </li>
+          {% endfor %}
+        </ol>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="total" style="display:none">
+    <h2>congratulations your are win the game and your total score is {{total}}</h2>
+  </div>
+
+{% endblock%}
+
+{% block scripts %}
+
+<!-- sourcing to jQuery cnd for further use in displaying question each aftor another
+and also for using AJAX -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- manin scirpt which are checking response after ajax request to decide
+does it goes to show next question or answer was false and redirect to index page
+then giving you right answers and also checks if question finished again
+redirect to index page but with congratulations -->
+<script>
+var q_count = 0;
+$( document ).ready(function() {
+    $('.question').first().css("display", "block");
+});
+  $("button").click(function() {
+    var btn = $(this).attr('id')
+  $.ajax({
+    type: "GET",
+    url: "{% url 'gameApp:check_answer' %}",
+    data: {answer_id: btn},
+
+    success: function(data){
+      if (data=="ok") {
+        console.log(btn)
+          q_count++;
+          $("button[id="+btn+"]").removeClass("btn-primary").addClass("btn-success");
+          setTimeout(function(){
+            $('.question:visible').next().css("display", "block");
+            $('.question:visible').prev().css("display", "none");
+          }, 700);
+
+          if (q_count==6) {
+            $(location).attr("href", "{% url 'index' %}");
+          }
+      } else {
+          $("button[id="+btn+"]").removeClass("btn-primary").addClass("btn-danger");
+          setTimeout(function(){
+            $(location).attr("href", "{% url 'index' %}");
+          }, 800);
+      }
+    }
+  });
+  });
+
+</script>
+{% endblock %}
